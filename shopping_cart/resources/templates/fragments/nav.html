@@ -8,11 +8,13 @@
     <div class="collapse navbar-collapse" id="navbarsExampleDefault">
 
         <ul class="navbar-nav mr-auto">
+            <!-- "cpages" is from Common.js -->
             <li class="nav-item active" th:each="page: ${cpages}"  th:if="${page.slug != 'home'}">
                 <a class="nav-link" th:href="@{'/' + ${page.slug}}" th:text="${page.title}"></a>
             </li>
         </ul>
 
+        <!-- "principal" is from Common.js -->
         <ul class="float-right navbar-nav" th:if="${principal == null}">
             <li class="nav-item active">
                 <a th:href="@{/register}" class="nav-link">Register</a>
