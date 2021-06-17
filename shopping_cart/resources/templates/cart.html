@@ -26,6 +26,8 @@
                         <th>Total</th>
                     </tr>
                     <tr th:each="el: ${cart}">
+                        <!-- the cart model is a bit different since its not saved in the db so the values
+                             are accessed differently -->
                         <td th:text="${el.value.name}"></td>
                         <td>
                             <img style="width: 100px;" th:src="@{'/media/' + ${el.value.image}}" />
