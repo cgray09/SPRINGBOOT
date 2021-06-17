@@ -5,6 +5,8 @@ import lombok.Data;
 @Data
 public class Cart {
 
+    // the cart never gets saved to the db
+    
     private int id;
     private String name;
     private String price;
