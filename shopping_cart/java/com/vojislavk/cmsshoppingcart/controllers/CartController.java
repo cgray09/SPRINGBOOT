@@ -60,6 +60,7 @@ public class CartController {
         model.addAttribute("size", size);
         model.addAttribute("total", total);
 
+        // "cartPage" has to do with whether the product was added from the cart (w/ + button)
         if (cartPage != null) {
             return "redirect:/cart/view";
         }
