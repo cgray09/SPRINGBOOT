@@ -1,0 +1,35 @@
+<script src="webjars/jquery/1.9.1/jquery.min.js"></script>
+<script src="webjars/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script src="webjars/bootstrap-datepicker/1.0.1/js/bootstrap-datepicker.js"></script>
+<script>
+    $('#targetDate').datepicker({
+        format: 'dd/mm/yyyy'
+    });
+</script>
+
+
+<div>  
+    <div class="nav-container footer border-top">
+        <span class="m span-style">Website Maker: Christian V. Grayson</span>
+        <span class="m">Privacy</span>
+        <span class="m">Terms of Service</span>
+    </div>
+  </div>
+</body>
+<style>
+  .nav-container {
+      display: flex;
+      flex-direction: column;
+      text-align: center;
+      justify-content: center;
+      height: 150px;
+      background: #f8f8f8;
+      border-top: 1px solid #e7e7e7;
+  }
+
+  .m {
+    color: black;
+    font-size: 15px;
+  }
+</style>
+</html>
