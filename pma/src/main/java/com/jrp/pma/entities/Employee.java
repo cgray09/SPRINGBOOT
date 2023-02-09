@@ -23,7 +23,7 @@ import com.jrp.pma.validators.UniqueValue;
 public class Employee {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator="employee_seq")
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long employeeId;
 	
 	@NotBlank(message="*Must give a first name")
