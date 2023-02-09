@@ -21,7 +21,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class Project {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator="project_seq")
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int projectId;
 	
 	private String name;
