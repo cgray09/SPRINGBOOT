@@ -1,1 +1,2 @@
-web: java -Dspring.profiles.active=prod -Dserver.port=$PORT -jar target/*.jar
+web: java -Dspring.profiles.active=dev -Dserver.port=$PORT -jar target/*.jar 
+# active=dev for h2 database
