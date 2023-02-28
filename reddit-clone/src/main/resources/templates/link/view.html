@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{layouts/main_layout :: head(title = 'Springit - Spring Boot Reddit Clone')}">
+</head>
+<body>
+
+    <nav th:replace="~{layouts/main_layout :: nav}"></nav>
+    <div th:replace="~{layouts/main_layout :: jumbotron}"></div>
+
+    <div class="container content">
+
+        <div class="alert alert-success" role="alert" th:if="${success}">
+            Your new link was created!
+        </div>
+
+        <!-- link -->
+        <div class="row link">
+            <div sec:authorize="isAuthenticated()"  class="col-1">
+                <div><a href="#" class="upvote" th:data-id="${link.id}"><i class="fas fa-arrow-up"></i></a></div>
+                <div><span th:id="|votecount-${link.id}|" class="votecount" th:text="${link.getVoteCount()}">0</span></div>
+                <div><a href="#" class="downvote" th:data-id="${link.id}" th:disabled="true"><i class="fas fa-arrow-down"></i></a></div>
+            </div>
+            <div sec:authorize="!isAuthenticated()" class="col-1">
+                <div>
+                	<a th:href="@{/login}" class="upvote" th:data-id="${link.id}">
+                		<i class="fas fa-arrow-up"></i>
+                	</a>
+                </div>
+                <div><span th:id="|votecount-${link.id}|" class="votecount" th:text="${link.getVoteCount()}">0</span></div>
+                <div>
+                	<a th:href="@{/login}"  class="downvote" th:data-id="${link.id}" >
+                		<i class="fas fa-arrow-down"></i>
+                	</a>
+                </div>
+            </div>
+            
+            
+            <div class="col-11">
+                <p class="title">
+                    <a class="title " th:href="${link.url}" th:text="${link.title}" target="_blank">
+                        What's new in Spring Boot 2?
+                    </a>
+                    <span class="domain">(<a th:href="${link.url}" th:text="${link.getDomainName()}">therealdanvega.com</a>)</span>
+                </p>
+                <p class="tagline ">submitted
+                    <time th:title="${link.getCreationDate()}" th:datetime="${link.getCreationDate()}" class="live-timestamp" th:text="${link.getPrettyTime()}">1 hour(s)</time> by
+                    <span class="userattrs"></span>
+                </p>
+                <p><a th:href="${link.url}" th:text="${link.url}" target="_blank"></a></p>
+                <p>
+                    <a href="/" class="comments" th:text="|${link.getComments().size()} comments|"><i class="fas fa-comments"></i> 0 comments</a>
+                    <a href="#" class="share"><i class="fas fa-share-square"></i> share</a>
+                </p>
+            </div>
+        </div>
+
+        <!-- link comments -->
+        <div id="comments" class="comments">
+            <div class="row header">
+                <div class="col-1">&nbsp;</div>
+                <div class="col-11 title" th:text="|all ${link.getComments().size()} comments|">
+                    all 21 comments
+                </div>
+            </div>
+            <div class="row addcomment" sec:authorize="hasRole('ROLE_USER')">
+                <div class="col-1">&nbsp;</div>
+                <div class="col-11">
+                    <form id="frmAddComment" method="POST" th:action="@{/link/comments}" th:object="${comment}">
+                        <input type="hidden" th:field="*{link}"/>
+                        <div class="form-group">
+                            <textarea class="form-control" id="comment" rows="3" th:field="*{body}"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add Comment</button>
+                    </form>
+                </div>
+            </div>
+            <!-- single comment -->
+            <div class="row comment" th:each="comment : ${link.getComments()}">
+                <div class="col-1">&nbsp;</div>
+                <div class="col-11">
+                    <span><a href="#" th:text="${comment.getCreatedBy()}"><i class="far fa-user"></i> therealdanvega</a></span>
+                    <span th:text="${comment.getPrettyTime()}"><i class="far fa-clock"></i> 4 hours ago</span>
+                    <p class="body" th:text="${comment.getBody()}">It’s one thing I never care about, new releases of maven. Yet I do for most other things.. I really should take a look at any features released in the last while! Pull my dependencies, run my tests and upload to nexus. I don’t care for much else, I wonder what if any I’m missing.</p>
+                    <a href="#" class="permalink"><i class="fas fa-link"></i> permalink</a>
+                    <a href="#" class="like"><i class="far fa-thumbs-up"></i> Like</a>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <br/><br/>
+
+<div class="nav-container footer">
+        <span class="m span-style">Website Maker: Christian V. Grayson</span>
+        <span class="m">Terms of Service</span>
+        <span class="m">Privacy</span>
+    </div>
+    
+    <script sec:authorize="isFullyAuthenticated()">
+        const allvotes = document.querySelectorAll(".upvote, .downvote");
+
+        for(let i=0; i<allvotes.length; i++) {
+            let className = allvotes[i].className;
+            allvotes[i].addEventListener('click',function (event) {
+                const direction = className === 'upvote' ? 1 : -1;
+                const linkID = this.getAttribute("data-id");
+                const voteSum = document.getElementById('votecount-' + linkID);
+                const voteSumValue = voteSum.innerHTML;
+                fetch(`https://reddit-replica.herokuapp.com/vote/link/${linkID}/direction/${direction}/votecount/${voteSumValue}`)
+                    .then(response => response.json())
+                    .then(data => voteSum.innerHTML = data)
+                    .catch(err => console.error(err))
+            });
+        }
+    </script>
+
+</body>
+<style>
+	.content {
+  min-height: calc(100vh - 300px);
+}
+  .nav-container {
+      display: flex;
+      flex-direction: column;
+      text-align: center;
+      justify-content: center;
+      height: 150px;
+      background: #17629D;
+      
+      width: 100%;
+  }
+  .m {
+    color: white;
+    font-size: 15px;
+  }
+  </style>
+</html>
